@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizar PDF</title>
+</head>
+<body>
+    <div id="pspdfkit" style="width:100%; height: 100vh;"></div>
+
+    <!-- PSPDFKit Script -->
+    <script src="./assets/pspdfkit.js"></script>
+
+    <!-- Script para manipular o arquivo PDF -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Recupera a URL do PDF gerado
+            const pdfUrl = sessionStorage.getItem('pdfUrl');
+
+            if (pdfUrl) {
+                // Carrega o arquivo PDF no PSPDFKit
+                PSPDFKit.load({
+                    container: "#pspdfkit",
+                    document: pdfUrl
+                })
+                .catch(function(error) {
+                    console.error("Erro ao carregar o PDF no PSPDFKit:", error.message);
+                });
+            } else {
+                console.error("Nenhum arquivo PDF foi carregado.");
+            }
+        });
+    </script>
+</body>
+</html>
