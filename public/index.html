@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de arquivo do Office</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>Conversor de arquivo do Office</h1>
+        <form class="upload-section" id="uploadForm" enctype="multipart/form-data">
+            <label for="file-input" class="file-label">Escolha um arquivo do Office (.docx, .xlsx, .pptx)</label>
+            <input type="file" id="file-input" accept=".docx, .xlsx, .pptx" required>
+            <button type="submit" id="convert-btn">Converter para PDF</button>
+        </form>
+    </div>
+
+    <!-- Script JS -->
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const fileInput = document.getElementById('file-input');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                fetch('/convert', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        sessionStorage.setItem('pdfUrl', data.pdfUrl);
+                        window.location.href = 'view.html';
+                    } else {
+                        console.error("Erro na conversão do arquivo:", data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error("Erro ao enviar o arquivo:", error);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
