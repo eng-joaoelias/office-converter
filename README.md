@@ -43,9 +43,9 @@ Para executar este projeto, você precisará:
 4. **Git** (opcional):
    - Para clonar o repositório, você pode usar o Git. Instale em [git-scm.com](https://git-scm.com/).
 
-### Sistema Operacional
+### Sistema Operacional (servidor)
 
-- Windows, macOS ou Linux.
+- Windows.
 
 ## Tecnologias Utilizadas
 
