@@ -5,10 +5,9 @@ const fileUpload = require('express-fileupload');
 const fs = require('fs');
 
 const app = express();
+const FILE_EXPIRATION_TIME = 10 * 60 * 1000; // 10 minutos em milissegundos
 
 app.use(fileUpload());
-
-// Serve arquivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.post('/convert', (req, res) => {
@@ -41,7 +40,28 @@ app.post('/convert', (req, res) => {
             }
 
             console.log("Arquivo convertido com sucesso:", stdout);
-            res.json({ success: true, pdfUrl: `/uploads/${path.basename(outputFilePath)}` });
+            const pdfUrl = `/uploads/${path.basename(outputFilePath)}`;
+            res.json({ success: true, pdfUrl });
+
+            // Remover o arquivo original após a conversão
+            fs.unlink(filePath, (err) => {
+                if (err) {
+                    console.error("Erro ao remover o arquivo original:", err);
+                } else {
+                    console.log("Arquivo original removido com sucesso.");
+                }
+            });
+
+            // Programar remoção do PDF após o tempo de expiração
+            setTimeout(() => {
+                fs.unlink(outputFilePath, (err) => {
+                    if (err) {
+                        console.error("Erro ao remover o arquivo PDF:", err);
+                    } else {
+                        console.log("Arquivo PDF removido com sucesso.");
+                    }
+                });
+            }, FILE_EXPIRATION_TIME);
         });
     });
 });
